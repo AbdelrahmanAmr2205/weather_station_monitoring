@@ -16,12 +16,16 @@ public class ScheduledExecuter {
     }
 
     public void start() {
+        System.out.println("[ScheduledExecuter] Scheduler started. Checking for files every 10 seconds.");
         scheduler.scheduleAtFixedRate(() -> {
             try {
+                System.out.println("[ScheduledExecuter] Starting periodic ingestion run...");
                 ingestor.readParquetFilesFromDirectory();
                 ingestor.indexParquetFiles();
                 ingestor.clearParquetFiles();
+                System.out.println("[ScheduledExecuter] Ingestion run finished.");
             } catch (Exception e) {
+                System.err.println("[ScheduledExecuter] Error occurred during periodic run:");
                 e.printStackTrace();
             }
         }, 0, 10, TimeUnit.SECONDS);

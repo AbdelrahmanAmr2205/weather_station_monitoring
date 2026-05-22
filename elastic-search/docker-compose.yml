@@ -24,7 +24,7 @@ services:
 
   parquet-ingestor:
       build:
-        context: ./parquet-ingestor
+        context: ./parquet-ingestor/parquetIngestor
       container_name: parquet-ingestor
       depends_on:
         - elasticsearch
