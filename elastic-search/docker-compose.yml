@@ -11,6 +11,12 @@ services:
       - "9200:9200"
     volumes:
       - weather-status-data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   kibana:
     image: docker.elastic.co/kibana/kibana:9.4.1
@@ -20,17 +26,19 @@ services:
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
     depends_on:
-      - elasticsearch
+      elasticsearch:
+        condition: service_healthy
 
   parquet-ingestor:
-      build:
-        context: ./parquet-ingestor/parquetIngestor
-      container_name: parquet-ingestor
-      depends_on:
-        - elasticsearch
-      volumes:
-        - ./shared_storage:/app/data  # TODO: change this path based on location of shared storage
-      environment:
+    build:
+      context: ./parquet-ingestor/parquetIngestor
+    container_name: parquet-ingestor
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    volumes:
+      - ./shared_storage:/app/data  # TODO: change this path based on location of shared storage
+    environment:
         - ELASTICSEARCH_HOST=http://elasticsearch:9200
 volumes:
   weather-status-data:
