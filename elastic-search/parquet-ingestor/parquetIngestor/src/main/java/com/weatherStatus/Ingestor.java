@@ -36,30 +36,6 @@ public class Ingestor {
                 .client(client)
                 .maxOperations(100)
                 .flushInterval(5, TimeUnit.SECONDS)
-                .listener(new co.elastic.clients.elasticsearch._helpers.bulk.BulkListener<Void>() {
-                    @Override
-                    public void beforeBulk(long executionId, co.elastic.clients.elasticsearch.core.BulkRequest request, java.util.List<Void> contexts) {
-                        System.out.println("[BulkListener] Sending bulk request #" + executionId + " with " + request.operations().size() + " operations.");
-                    }
-                    @Override
-                    public void afterBulk(long executionId, co.elastic.clients.elasticsearch.core.BulkRequest request, java.util.List<Void> contexts, co.elastic.clients.elasticsearch.core.BulkResponse response) {
-                        if (response.errors()) {
-                            System.err.println("[BulkListener] Bulk request #" + executionId + " completed WITH ERRORS:");
-                            response.items().forEach(item -> {
-                                if (item.error() != null) {
-                                    System.err.println("[BulkListener]   - Doc [" + item.id() + "]: " + item.error().reason());
-                                }
-                            });
-                        } else {
-                            System.out.println("[BulkListener] Bulk request #" + executionId + " completed successfully. Indexed " + response.items().size() + " docs.");
-                        }
-                    }
-                    @Override
-                    public void afterBulk(long executionId, co.elastic.clients.elasticsearch.core.BulkRequest request, java.util.List<Void> contexts, Throwable failure) {
-                        System.err.println("[BulkListener] Bulk request #" + executionId + " FAILED: " + failure.getMessage());
-                        failure.printStackTrace();
-                    }
-                })
                 .build();
         System.out.println("[Ingestor] BulkIngester successfully initialized.");
     }
