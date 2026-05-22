@@ -50,6 +50,8 @@ public class RainTriggerApp {
         });
 
         try {
+            // Add this line to wipe corrupted state files before starting
+            streams.cleanUp();
             streams.start();
             latch.await(); // This locks the app here, keeping it running!
         } catch (InterruptedException e) {
