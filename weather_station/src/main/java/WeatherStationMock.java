@@ -14,9 +14,9 @@ public class WeatherStationMock {
 
     public static void main(String[] args) {
         Properties properties = new Properties();
-        properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS); // [cite: 87, 88]
-        properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName()); // [cite: 89, 90]
-        properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName()); // [cite: 91, 92]
+        properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
+        properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+        properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 
         ObjectMapper mapper = new ObjectMapper();
         Random random = new Random();
@@ -25,7 +25,7 @@ public class WeatherStationMock {
         long stationId = Long.parseLong(System.getenv().getOrDefault("STATION_ID", "1"));
         long sNo = 0;
 
-        try (KafkaProducer<String, String> producer = new KafkaProducer<>(properties)) { // [cite: 93]
+        try (KafkaProducer<String, String> producer = new KafkaProducer<>(properties)) {
             while (true) {
                 sNo++; // Increment with each intended message 
                 
@@ -40,7 +40,7 @@ public class WeatherStationMock {
                 int batteryRoll = random.nextInt(100);
                 String batteryStatus = (batteryRoll < 30) ? "low" : (batteryRoll < 70) ? "medium" : "high";
 
-                // 3. Construct JSON Payload [cite: 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74]
+                // 3. Construct JSON Payload
                 ObjectNode weatherNode = mapper.createObjectNode();
                 weatherNode.put("humidity", random.nextInt(101)); 
                 weatherNode.put("temperature", random.nextInt(120)); 
