@@ -12,4 +12,4 @@ WORKDIR /app
 COPY --from=build /app/target/*.jar central_server.jar
 
 # Run the application
-ENTRYPOINT ["java", "-jar", "central_server.jar"]
+ENTRYPOINT ["sh", "-c", "mkdir -p /shared_data/jfr && exec java -XX:StartFlightRecording=delay=60s,duration=60s,filename=/shared_data/jfr/central.jfr -jar central_server.jar"]
