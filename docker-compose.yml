@@ -16,5 +16,69 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://127.0.0.1:9092
+
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092,EXTERNAL://0.0.0.0:9092
+
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
+
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  weather-station:
+    image: weather-station
+    depends_on:
+      - kafka
+    environment:
+      KAFKA_BROKER: kafka:29092
+      STATION_ID: 1
+
+  weather-station-2:
+    image: weather-station
+    environment:
+      STATION_ID: 2
+      KAFKA_BROKER: kafka:29092
+
+  weather-station-3:
+    image: weather-station
+    environment:
+      STATION_ID: 3
+      KAFKA_BROKER: kafka:29092
+
+  weather-station-4:
+    image: weather-station
+    environment:
+      STATION_ID: 4
+      KAFKA_BROKER: kafka:29092
+
+  weather-station-5:
+    image: weather-station
+    environment:
+      STATION_ID: 5
+      KAFKA_BROKER: kafka:29092
+
+  weather-station-6:
+    image: weather-station
+    environment:
+      STATION_ID: 6
+      KAFKA_BROKER: kafka:29092
+
+  weather-station-7:
+    image: weather-station
+    environment:
+      STATION_ID: 7
+      KAFKA_BROKER: kafka:29092
+
+  central-server:
+    build:
+      context: ./central_server
+    container_name: central-server
+    depends_on:
+      - kafka
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+      - PARQUET_OUTPUT_DIR=/shared_data/unprocessed
+    volumes:
+      - ./shared_storage:/shared_data

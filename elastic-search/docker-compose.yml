@@ -37,7 +37,7 @@ services:
       elasticsearch:
         condition: service_healthy
     volumes:
-      - ./shared_storage:/app/data  # TODO: change this path based on location of shared storage
+      - ../shared_storage:/app/data  # TODO: change this path based on location of shared storage
     environment:
         - ELASTICSEARCH_HOST=http://elasticsearch:9200
 volumes:
