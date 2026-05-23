@@ -77,8 +77,21 @@ services:
     container_name: central-server
     depends_on:
       - kafka
+      - bitcask-server
     environment:
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
       - PARQUET_OUTPUT_DIR=/shared_data/unprocessed
+      - BITCASK_URL=http://bitcask-server:9092
     volumes:
       - ./shared_storage:/shared_data
+
+  bitcask-server:
+    image: abdelrahmanamr2205/bitcask-java
+    container_name: bitcask-server
+    ports:
+      - "9095:9092"
+    environment:
+      - BITCASK_DIR=/bitcask/data
+      - BITCASK_MAX_FILE_SIZE=4194304
+    volumes:
+      - ./shared_storage/bitcask:/bitcask/data

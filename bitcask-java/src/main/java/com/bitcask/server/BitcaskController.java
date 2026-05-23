@@ -25,7 +25,6 @@ import java.util.Set;
  * with the addition of the {@code GET /} endpoint required by the client spec.
  */
 @RestController
-@RequestMapping("/")
 public class BitcaskController {
 
     private final BitcaskDB db;
@@ -42,7 +41,7 @@ public class BitcaskController {
      * Returns a JSON object mapping every stored key to its current value.
      * Used by the {@code --view-all} and {@code --perf} client modes.
      */
-    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getAll() {
         Set<String> keys = db.keys();
         Map<String, Object> result = new LinkedHashMap<>();

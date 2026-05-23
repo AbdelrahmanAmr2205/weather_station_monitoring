@@ -16,6 +16,7 @@ public class KafkaConsumerService {
 
     private final MessageProcessorService messageProcessorService;
     private final BatchBufferService batchBufferService;
+    private final BitcaskClientService bitcaskClientService;
 
     @KafkaListener(topics = "weather_statuses")
     public void consume(WeatherStatusDTO message) {
@@ -26,6 +27,9 @@ public class KafkaConsumerService {
                             status.getStationId(), status.getSequenceNumber(),
                             status.getDate());
                     batchBufferService.add(status);
+                    
+                    // Real-time Bitcask KV updates
+                    bitcaskClientService.updateStationStatus(status);
                 },
                 () -> log.warn("Message dropped (failed validation): stationId={} sNo={}",
                         message.stationId, message.sNo)
