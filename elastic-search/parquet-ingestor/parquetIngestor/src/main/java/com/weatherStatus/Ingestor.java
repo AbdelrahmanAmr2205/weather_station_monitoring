@@ -42,14 +42,16 @@ public class Ingestor {
 
     public void readParquetFilesFromDirectory() { // dir is /app/data
         System.out.println("[Ingestor] Scanning for Parquet files in: " + unprocessedDir.toString());
-        File[] files = new File(unprocessedDir.toString()).listFiles();
-        if (files != null) {
-            for (File file : files) {
-                if (file.isFile() && file.getName().endsWith(".parquet")) {
-                    System.out.println("[Ingestor] Found target file: " + file.getName());
-                    parquetFiles.add(file);
-                }
-            }
+        try {
+            java.nio.file.Files.walk(java.nio.file.Paths.get(unprocessedDir.toString()))
+                .filter(java.nio.file.Files::isRegularFile)
+                .filter(p -> p.toString().endsWith(".parquet"))
+                .forEach(p -> {
+                    System.out.println("[Ingestor] Found target file: " + p.getFileName());
+                    parquetFiles.add(p.toFile());
+                });
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
         }
         System.out.println("[Ingestor] Scan complete. Total files enqueued for ingestion: " + parquetFiles.size());
     }
