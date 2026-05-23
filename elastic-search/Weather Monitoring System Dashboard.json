@@ -1,0 +1,131 @@
+POST kbn:/api/dashboards
+{
+  "options": {
+    "hide_panel_titles": false,
+    "hide_panel_borders": false,
+    "use_margins": true,
+    "auto_apply_filters": true,
+    "sync_colors": false,
+    "sync_cursor": true,
+    "sync_tooltips": false
+  },
+  "query": {
+    "expression": "",
+    "language": "kql"
+  },
+  "title": "Weather Monitoring System Dashboard",
+  "panels": [
+    {
+      "grid": {
+        "y": 0,
+        "x": 22,
+        "w": 17,
+        "h": 24
+      },
+      "config": {
+        "description": "",
+        "type": "pie",
+        "metrics": [
+          {
+            "operation": "count",
+            "empty_as_null": true
+          }
+        ],
+        "group_by": [
+          {
+            "operation": "terms",
+            "fields": [
+              "battery_status"
+            ],
+            "limit": 9,
+            "other_bucket": {
+              "include_documents_without_field": false
+            },
+            "rank_by": {
+              "type": "metric",
+              "metric_index": 0,
+              "direction": "desc"
+            },
+            "color": {
+              "mode": "categorical",
+              "palette": "default",
+              "mapping": []
+            }
+          }
+        ],
+        "data_source": {
+          "type": "data_view_reference",
+          "ref_id": "fa62fe17-c967-482f-9059-9e3cb11e23c2"
+        },
+        "legend": {
+          "visibility": "auto",
+          "nested": false
+        },
+        "styling": {
+          "labels": {
+            "visible": true,
+            "position": "outside"
+          },
+          "values": {
+            "visible": true,
+            "mode": "percentage"
+          }
+        },
+        "sampling": 1,
+        "ignore_global_filters": false
+      },
+      "id": "1559a86d-aac6-418b-b6c1-68ffe3e0f512",
+      "type": "vis"
+    },
+    {
+      "grid": {
+        "y": 0,
+        "x": 0,
+        "w": 22,
+        "h": 24
+      },
+      "config": {
+        "description": "",
+        "type": "data_table",
+        "data_source": {
+          "type": "data_view_reference",
+          "ref_id": "fa62fe17-c967-482f-9059-9e3cb11e23c2"
+        },
+        "sampling": 1,
+        "ignore_global_filters": false,
+        "metrics": [
+          {
+            "operation": "formula",
+            "formula": "(max(s_no) - count(s_no)) / max(s_no)",
+            "label": "Percentage Of Error",
+            "format": {
+              "type": "percent",
+              "decimals": 2,
+              "compact": false
+            },
+            "visible": true,
+            "alignment": "center"
+          }
+        ],
+        "rows": [
+          {
+            "operation": "histogram",
+            "include_empty_rows": true,
+            "granularity": "auto",
+            "field": "station_id",
+            "alignment": "center",
+            "width": 351
+          }
+        ],
+        "styling": {
+          "row_numbers": {
+            "visible": true
+          }
+        }
+      },
+      "id": "7b743610-d5c1-4bc7-91e7-1b93e5280c54",
+      "type": "vis"
+    }
+  ],
+  "pinned_panels": []
+}
